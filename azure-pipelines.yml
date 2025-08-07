@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  name: LocalPool
+  vmImage: 'ubuntu-latest'
   demands: []
 
 steps:
