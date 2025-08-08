@@ -1,8 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - master
 
@@ -14,7 +9,26 @@ steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
-- script: 
+- script: |
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+
+# 🧪 Ejecutar pruebas y generar archivo .trx
+- script: |
+    dotnet test --logger:"trx;LogFileName=test_results.trx"
+  displayName: 'Ejecutar pruebas y generar archivo .trx'
+
+# 📄 Publicar resultados de pruebas
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/test_results.trx'
+    testRunTitle: 'Simulación de pruebas'
+  condition: succeededOrFailed()
+  displayName: 'Publicar resultados de pruebas'
+
+# 📊 Generar informe HTML de pruebas
+- script: |
+    dotnet tool install --global dotnet-reportgenerator-globaltool
+    reportgenerator -reports:test_results.trx -targetdir:TestReport -reporttypes:Html
+  displayName: 'Generar informe HTML de pruebas'
