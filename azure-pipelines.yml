@@ -16,6 +16,9 @@ steps:
 - script: dotnet build --configuration Release
   displayName: 'Compilar proyecto'
 
+- script: dir /s test_results.trx
+  displayName: 'Verificar existencia de test_results.trx'
+
 - script: dotnet test --logger:"trx;LogFileName=test_results.trx"
   displayName: 'Ejecutar pruebas'
 
