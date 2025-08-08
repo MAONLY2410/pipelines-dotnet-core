@@ -13,9 +13,6 @@ steps:
 - script: dotnet restore
   displayName: 'Restaurar dependencias'
 
-- script: dotnet build --configuration Release
-  displayName: 'Compilar proyecto'
-
 - script: dotnet test DemoTests/DemoTests.csproj --logger:"trx;LogFileName=test_results.trx"
   displayName: 'Ejecutar pruebas y generar archivo trx'
 
