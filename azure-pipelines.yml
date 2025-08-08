@@ -1,20 +1,26 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - master
 
 pool:
   name: LocalPool
-  demands: []
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '7.0.x'
 
-- script: 
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- script: dotnet restore
+  displayName: 'Restaurar dependencias'
+
+- script: dotnet build --configuration Release
+  displayName: 'Compilar proyecto'
+
+- script: dotnet test --logger:"trx;LogFileName=test_results.trx"
+  displayName: 'Ejecutar pruebas'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/*.trx'
+    testRunTitle: 'Resultados de pruebas'
+  condition: succeededOrFailed()
