@@ -14,6 +14,9 @@ steps:
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
 
+- script: dir /s test_results.trx
+  displayName: 'Verificar existencia de test_results.trx'
+
 # 🧪 Ejecutar pruebas y generar archivo .trx
 - script: |
     dotnet test --logger:"trx;LogFileName=test_results.trx"
@@ -29,6 +32,7 @@ steps:
 
 # 📊 Generar informe HTML de pruebas
 - script: |
-    dotnet tool install --global dotnet-reportgenerator-globaltool
-    reportgenerator -reports:test_results.trx -targetdir:TestReport -reporttypes:Html
+    dotnet tool install --global dotnet-reportgenerator-globaltool || echo "Falló instalación"
+    reportgenerator -reports:test_results.trx -targetdir:TestReport -reporttypes:Html || echo "Falló generación de reporte"
   displayName: 'Generar informe HTML de pruebas'
+  continueOnError: true
